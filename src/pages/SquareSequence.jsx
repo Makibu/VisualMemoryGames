@@ -32,8 +32,8 @@ export default function SquareSequence(){
                 highlightSquare(num)
                 if (index === sequence.length - 1){
                     setTimeout(() => {
-                        setIsPlayerTurn(true)
                         setGameStatus('Your turn');
+                        setIsPlayerTurn(true)
                     }, 1000)
                     setTimeout(() => {
                     }, 750)
@@ -53,6 +53,7 @@ export default function SquareSequence(){
     }
     
     function handleSquareClick(num){
+        console.log(num)
         if (!isPlayerTurn) return
         const newPlayerSequence = [...playerSequence, num]
         setPlayerSequence(newPlayerSequence)
@@ -89,16 +90,15 @@ export default function SquareSequence(){
             <NavButton text={'Home'}/>
             {(!isStarted && !isLost) &&
                 <div onClick={handleStartGame}
-                     className={'text-c-orange w-[80%] h-[80%] flex items-center justify-center text-xl md:text-3xl xl:text-4xl'}>Click
+                     className={'text-c-orange w-[80%] h-[80%] full-flex text-xl md:text-3xl xl:text-4xl'}>Click
                     Anywhere to
                     Start...</div>}
             {(!isStarted && isLost) &&
-                <>
-                    <span className={'text-c-orange text-xl text-center md:text-3xl xl:text-4xl'}
-                          onClick={handleStartGame}>You Lost. Click Anywhere to restart...</span>
+                <div className={'w-[80%] h-[80%] full-flex'} onClick={handleStartGame}>
+                    <span className={'text-c-orange text-xl text-center md:text-3xl xl:text-4xl'}>You Lost. Click Anywhere to restart...</span>
                     <span className={'text-white absolute bottom-10 text-3xl'}>Current Score: 00</span>
                     <span className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: 00</span>
-                </>
+                </div>
             }
             {isStarted && (
                 <div
@@ -110,7 +110,7 @@ export default function SquareSequence(){
                             <div
                                 key={index}
                                 id={`square-${index}`}
-                                className="w-16 h-16 bg-c-orange rounded-lg md:w-24 md:h-24 lg:w-32 lg:h-32 xl:w-40 xl:h-40"
+                                className="w-16 h-16 bg-c-orange rounded-lg md:w-24 md:h-24 lg:w-32 lg:h-32 xl:w-40 xl:h-40 z-10"
                                 onClick={() => handleSquareClick(index)}
                             ></div>
                         ))}
