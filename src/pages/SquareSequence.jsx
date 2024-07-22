@@ -34,9 +34,7 @@ export default function SquareSequence(){
                     setTimeout(() => {
                         setGameStatus('Your turn');
                         setIsPlayerTurn(true)
-                    }, 1000)
-                    setTimeout(() => {
-                    }, 750)
+                    }, 700)
                 }
             }, (index + 1) * 1000)
         })

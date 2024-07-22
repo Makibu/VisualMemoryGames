@@ -4,13 +4,18 @@ export default function NavButton({text}){
     const navigate = useNavigate()
     
     function handleRelocate(){
-        navigate('/')
-        setTimeout(() => {
-            window.scrollTo({
-                top: innerHeight,
-                behavior: 'smooth'
-            })
-        }, 100)
+        if (text === 'Home'){
+            navigate('/')
+            setTimeout(() => {
+                window.scrollTo({
+                    top: innerHeight,
+                    behavior: 'smooth'
+                })
+            }, 100)
+        }
+        if (text === 'Login'){
+        
+        }
     }
     
     return (

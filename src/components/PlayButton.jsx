@@ -10,8 +10,8 @@ export default function PlayButton({hero, moveTo}){
     }
     
     function handleScroll(){
-        window.scrollBy({
-            top: window.innerHeight,
+        window.scrollTo({
+            top: window.innerHeight + 70,
             behavior: 'smooth'
         })
     }
