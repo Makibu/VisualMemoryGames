@@ -94,8 +94,6 @@ export default function SquareSequence(){
             {(!isStarted && isLost) &&
                 <div className={'w-[80%] h-[80%] full-flex'} onClick={handleStartGame}>
                     <span className={'text-c-orange text-xl text-center md:text-3xl xl:text-4xl'}>You Lost. Click Anywhere to restart...</span>
-                    <span className={'text-white absolute bottom-10 text-3xl'}>Current Score: 00</span>
-                    <span className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: 00</span>
                 </div>
             }
             {isStarted && (
@@ -113,10 +111,10 @@ export default function SquareSequence(){
                             ></div>
                         ))}
                     </div>
-                    <span className={'text-white absolute bottom-6 text-3xl'}>Current Score: 00</span>
-                    <span className={'text-gray-500 absolute bottom-0 text-xl'}>Your High Score: 00</span>
                 </div>
             )}
+            <span className={'text-white absolute bottom-6 text-3xl'}>Current Score: 00</span>
+            <span className={'text-gray-500 absolute bottom-0 text-xl'}>Your High Score: 00</span>
             <BgLight className={'absolute left-[50%] translate-x-[-50%] bottom-0'}/>
         </div>
     )

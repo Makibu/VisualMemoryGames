@@ -8,7 +8,7 @@ export default function NavButton({text}){
             navigate('/')
             setTimeout(() => {
                 window.scrollTo({
-                    top: innerHeight,
+                    top: innerHeight + 70,
                     behavior: 'smooth'
                 })
             }, 100)

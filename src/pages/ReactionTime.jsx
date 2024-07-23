@@ -72,13 +72,6 @@ export default function ReactionTime(){
                                 className={'text-gray-500 text-sm md:text-lg lg:text-xl xl:text-3xl'}>
                                 Click anywhere to restart!
                             </span>
-                            <span
-                                className={'text-white absolute bottom-3 text-lg md:text-2xl lg:text-3xl md:bottom-6'}>
-                                Best Time in Session: 000ms
-                            </span>
-                            <span className={'text-gray-500 absolute bottom-0 text-sm md:text-lg lg:text-xl'}>
-                                Your Best Time Ever: 000ms
-                            </span>
                         </div>
                     )}
                     {!isFallstart && (
@@ -90,13 +83,6 @@ export default function ReactionTime(){
                             <span
                                 className={'text-gray-500 text-sm md:text-lg lg:text-xl xl:text-3xl'}>
                                 Click anywhere to restart.
-                            </span>
-                            <span
-                                className={'text-white absolute bottom-3 text-lg md:text-2xl lg:text-3xl md:bottom-6'}>
-                                Best Time in Session: 000ms
-                            </span>
-                            <span className={'text-gray-500 absolute bottom-0 text-sm md:text-lg lg:text-xl'}>
-                                Your Best Time Ever: 000ms
                             </span>
                         </div>
                     )}
@@ -112,11 +98,11 @@ export default function ReactionTime(){
                             className={`rounded-3xl w-full h-full shadow-orangeNeon ${isGreen ? 'bg-lime-400' : 'bg-red-400'}`}
                             onClick={isGreen ? handleTimeCheck : handleFallStart}></div>
                     </div>
-                    <span
-                        className={'text-white absolute bottom-4 text-lg md:text-2xl lg:text-3xl md:bottom-6'}>Best Time in Session: 000ms</span>
-                    <span className={'text-gray-500 absolute bottom-0 text-md md:text-lg lg:text-xl '}>Your Best Time Ever: 000ms</span>
                 </div>
             )}
+            <span
+                className={'text-white absolute bottom-4 text-lg md:text-2xl lg:text-3xl md:bottom-6'}>Best Time in Session: 000ms</span>
+            <span className={'text-gray-500 absolute bottom-0 text-md md:text-lg lg:text-xl '}>Your Best Time Ever: 000ms</span>
             <BgLight className={'absolute left-[50%] translate-x-[-50%] bottom-0'}/>
         </div>
     )

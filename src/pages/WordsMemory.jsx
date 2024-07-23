@@ -42,7 +42,6 @@ export default function WordsMemory(){
     }
     
     function handleButtonClick(isNew){
-        console.log(wordHistory)
         const hasAppearedBefore = wordHistory.includes(currentWord)
         const correct = (isNew && !hasAppearedBefore) || (!isNew && hasAppearedBefore)
         if (correct){
@@ -65,8 +64,6 @@ export default function WordsMemory(){
             {(!isStarted && isLost) &&
                 <div className={'w-[80%] h-[80%] full-flex'} onClick={handleStartGame}>
                     <span className={'text-c-orange text-xl text-center md:text-3xl xl:text-4xl'}>You Lost. Click Anywhere to restart...</span>
-                    <span className={'text-white absolute bottom-10 text-3xl'}>Current Score: 00</span>
-                    <span className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: 00</span>
                 </div>
             }
             {(isStarted && !isLost) && (
@@ -80,10 +77,10 @@ export default function WordsMemory(){
                                 className={'w-16 h-8 orange-stroke rounded-md'}>New
                         </button>
                     </div>
-                    <span className={'text-white absolute bottom-10 text-3xl'}>Current Score: 00</span>
-                    <span className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: 00</span>
                 </div>
             )}
+            <span className={'text-white absolute bottom-10 text-3xl'}>Current Score: 00</span>
+            <span className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: 00</span>
             <BgLight className={'absolute left-[50%] translate-x-[-50%] bottom-0'}/>
         </div>
     )

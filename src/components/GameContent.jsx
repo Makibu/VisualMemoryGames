@@ -8,7 +8,7 @@ export default function GameContent(){
             <GameBox title={'Words Memory'}/>
             <GameBox title={'Reaction Time'}/>
             <GameBox title={'Number Memory'}/>
-            <GameBox title={'Color Memory '}/>
+            <GameBox title={'Color Memory'}/>
         </div>
     )
 }

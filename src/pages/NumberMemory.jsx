@@ -6,22 +6,22 @@ export default function NumberMemory(){
     const [isStarted, setIsStarted] = useState(false)
     const [isLost, setIsLost] = useState(false)
     const [isTimeOver, setIsTimeOver] = useState(false)
+    const [isNext, setIsNext] = useState(false)
     
     const [number, setNumber] = useState(String(Math.floor(Math.random() * 10)))
-    // const [currentStep, setCurrentStep] = useState(1)
     const currentStep = useRef()
     const [timeLeft, setTimeLeft] = useState(3000)
-    // const timeLeft = useRef(3000)
     
     const intervalId = useRef()
     
     function handleStartGame(){
+        setIsNext(false)
         setIsStarted(true);
         setIsTimeOver(false)
         setIsLost(false);
         currentStep.current = 1
         generateNewNumber();
-        handleStartTimer();
+        handleStartTimer(3000);
     }
     
     function generateNewNumber(){
@@ -32,17 +32,17 @@ export default function NumberMemory(){
         setNumber(array.join(''))
     }
     
-    function handleStartTimer(){
+    function handleStartTimer(time){
         if (intervalId.current){
             clearInterval(intervalId.current);
         }
-        setTimeLeft(3000);
+        setTimeLeft(time)
         intervalId.current = setInterval(() => {
             setTimeLeft(prevTimeLeft => {
                 if (prevTimeLeft <= 100){
                     clearInterval(intervalId.current);
                     intervalId.current = null;
-                    setIsTimeOver(true);
+                    time === 3000 ? setIsTimeOver(true) : null
                     return 0;
                 }
                 return prevTimeLeft - 100;
@@ -53,10 +53,17 @@ export default function NumberMemory(){
     function handleCheckAnswer(event){
         if (event.key === 'Enter'){
             if (event.target.value === number){
-                currentStep.current += 1
-                handleStartTimer()
-                generateNewNumber()
-                event.target.value = ''
+                setIsNext(true)
+                handleStartTimer(1000)
+                setTimeout(() => {
+                    setIsNext(false)
+                    currentStep.current += 1
+                    generateNewNumber()
+                    setTimeout(() => {
+                        handleStartTimer(3000)
+                    }, 100)
+                    event.target.value = ''
+                }, 1000)
             }else{
                 setIsLost(true)
                 setIsStarted(false)
@@ -81,7 +88,7 @@ export default function NumberMemory(){
                      className={'text-c-orange w-[80%] h-[80%] flex items-center justify-center text-xl md:text-3xl xl:text-4xl'}>Click
                     Anywhere to
                     Start...</div>}
-            {(isStarted && !isTimeOver) && (
+            {(isStarted && !isTimeOver && !isNext) && (
                 <div
                     className={'w-[80%] h-[80%] full-flex flex-col'}>
                     <div className={'full-flex flex-col'}>
@@ -90,8 +97,17 @@ export default function NumberMemory(){
                             <div className={`h-full bg-c-orange`} style={{width: `${(timeLeft / 3000) * 100}%`}}></div>
                         </div>
                     </div>
-                    <span className={'text-white absolute bottom-10 text-3xl'}>Current Score: 00</span>
-                    <span className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: 00</span>
+                </div>
+            )}
+            {(isStarted && !isTimeOver && isNext) && (
+                <div
+                    className={'w-[80%] h-[80%] full-flex flex-col'}>
+                    <div className={'full-flex flex-col'}>
+                        <span className={'select-none text-2xl text-white md:text-3xl lg:text-4xl'}>Next one:</span>
+                        <div className={'w-48 h-2 rounded-full orange-stroke relative'}>
+                            <div className={`h-full bg-c-orange`} style={{width: `${(timeLeft / 1000) * 100}%`}}></div>
+                        </div>
+                    </div>
                 </div>
             )}
             {(isStarted && isTimeOver) && (
@@ -101,8 +117,6 @@ export default function NumberMemory(){
                         <input type={'number'} onKeyDown={handleCheckAnswer} id={'numberInput'}
                                className={'text-center rounded-md outline-none'}/>
                     </div>
-                    <span className={'text-white absolute bottom-10 text-3xl'}>Current Score: 00</span>
-                    <span className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: 00</span>
                 </>
             )}
             {isLost && (
@@ -111,10 +125,10 @@ export default function NumberMemory(){
                          className={'text-c-orange w-[80%] h-[80%] text-center full-flex text-xl md:text-3xl xl:text-4xl'}>You
                         Lost. Click anywhere to restart...
                     </div>
-                    <span className={'text-white absolute bottom-10 text-3xl'}>Current Score: 00</span>
-                    <span className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: 00</span>
                 </>
             )}
+            <span className={'text-white absolute bottom-10 text-3xl'}>Current Score: 00</span>
+            <span className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: 00</span>
             <BgLight className={'absolute left-[50%] translate-x-[-50%] bottom-0'}/>
         </div>
     )
