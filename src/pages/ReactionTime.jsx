@@ -12,6 +12,21 @@ export default function ReactionTime(){
     const [userTime, setUserTime] = useState()
     const timeRef = useRef()
     
+    if (!localStorage.getItem('ReactionTime')){
+        localStorage.setItem('ReactionTime', '0')
+    }
+    
+    let highScore = 0
+    if (localStorage.getItem('ReactionTime')){
+        highScore = +localStorage.getItem('ReactionTime')
+    }
+    if ((highScore > userTime) && highScore !== 0){
+        localStorage.setItem('ReactionTime', `${userTime}`)
+    }
+    if (highScore === 0 && userTime){
+        localStorage.setItem('ReactionTime', `${userTime}`)
+    }
+    
     function handleButtonActions(){
         setIsSubmitted(false)
         setIsStarted(true)
@@ -101,8 +116,7 @@ export default function ReactionTime(){
                 </div>
             )}
             <span
-                className={'text-white absolute bottom-4 text-lg md:text-2xl lg:text-3xl md:bottom-6'}>Best Time in Session: 000ms</span>
-            <span className={'text-gray-500 absolute bottom-0 text-md md:text-lg lg:text-xl '}>Your Best Time Ever: 000ms</span>
+                className={'text-gray-500 absolute bottom-0 text-md md:text-lg lg:text-xl '}>Your Best Time Ever: {highScore.toString().padStart(3, '0')}ms</span>
             <BgLight className={'absolute left-[50%] translate-x-[-50%] bottom-0'}/>
         </div>
     )

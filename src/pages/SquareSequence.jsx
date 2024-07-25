@@ -16,6 +16,20 @@ export default function SquareSequence(){
     const [isPlayerTurn, setIsPlayerTurn] = useState(false);
     const [gameStatus, setGameStatus] = useState('Watch the sequence');
     
+    const [score, setScore] = useState(0)
+    
+    if (!localStorage.getItem('SquareSequence')){
+        localStorage.setItem('SquareSequence', '0')
+    }
+    
+    let highScore = 0
+    if (localStorage.getItem('SquareSequence')){
+        highScore = +localStorage.getItem('SquareSequence')
+    }
+    if (highScore < score){
+        localStorage.setItem('SquareSequence', `${score}`)
+    }
+    
     function startNewRound(currentSequence){
         setIsLost(false)
         const newSequence = generateNextInSequence(currentSequence)
@@ -59,6 +73,7 @@ export default function SquareSequence(){
         
         if (newPlayerSequence[currentStep] !== sequence[currentStep]){
             setGameStatus('You lost!')
+            setScore(0)
             setIsLost(true)
             setIsPlayerTurn(false)
             setTimeout(() => {
@@ -69,6 +84,7 @@ export default function SquareSequence(){
         }
         
         if (newPlayerSequence.length === sequence.length){
+            setScore(prevState => prevState + 1)
             setGameStatus('Next round!')
             setIsPlayerTurn(false)
             setTimeout(() => startNewRound(sequence), 2000)
@@ -113,8 +129,10 @@ export default function SquareSequence(){
                     </div>
                 </div>
             )}
-            <span className={'text-white absolute bottom-6 text-3xl'}>Current Score: 00</span>
-            <span className={'text-gray-500 absolute bottom-0 text-xl'}>Your High Score: 00</span>
+            <span
+                className={'text-white absolute bottom-6 text-3xl'}>Current Score: {score.toString().padStart(2, '0')}</span>
+            <span
+                className={'text-gray-500 absolute bottom-0 text-xl'}>Your High Score: {highScore.toString().padStart(2, '0')}</span>
             <BgLight className={'absolute left-[50%] translate-x-[-50%] bottom-0'}/>
         </div>
     )

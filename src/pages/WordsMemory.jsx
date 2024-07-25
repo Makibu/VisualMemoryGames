@@ -28,6 +28,20 @@ export default function WordsMemory(){
     const [currentWord, setCurrentWord] = useState('');
     const [wordHistory, setWordHistory] = useState([]);
     
+    const [score, setScore] = useState(0)
+    
+    if (!localStorage.getItem('WordsMemory')){
+        localStorage.setItem('WordsMemory', '0')
+    }
+    
+    let highScore = 0
+    if (localStorage.getItem('WordsMemory')){
+        highScore = +localStorage.getItem('WordsMemory')
+    }
+    if (highScore < score){
+        localStorage.setItem('WordsMemory', `${score}`)
+    }
+    
     function generateNewWord(){
         const randomWord = wordsArray[Math.floor(Math.random() * wordsArray.length)]
         setCurrentWord(randomWord)
@@ -47,8 +61,10 @@ export default function WordsMemory(){
         if (correct){
             setWordHistory([...wordHistory, currentWord])
             generateNewWord()
+            setScore(prevState => prevState + 1)
         }else{
             setIsLost(true)
+            setScore(0)
             setIsStarted(false)
         }
     }
@@ -79,8 +95,10 @@ export default function WordsMemory(){
                     </div>
                 </div>
             )}
-            <span className={'text-white absolute bottom-10 text-3xl'}>Current Score: 00</span>
-            <span className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: 00</span>
+            <span
+                className={'text-white absolute bottom-10 text-3xl'}>Current Score: {score.toString().padStart(2, '0')}</span>
+            <span
+                className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: {highscore.toString().padStart(2, '0')}</span>
             <BgLight className={'absolute left-[50%] translate-x-[-50%] bottom-0'}/>
         </div>
     )

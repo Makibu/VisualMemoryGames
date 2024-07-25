@@ -14,6 +14,20 @@ export default function NumberMemory(){
     
     const intervalId = useRef()
     
+    const [score, setScore] = useState(0)
+    
+    if (!localStorage.getItem('NumberMemory')){
+        localStorage.setItem('NumberMemory', '0')
+    }
+    
+    let highScore = 0
+    if (localStorage.getItem('NumberMemory')){
+        highScore = +localStorage.getItem('NumberMemory')
+    }
+    if (highScore < score){
+        localStorage.setItem('NumberMemory', `${score}`)
+    }
+    
     function handleStartGame(){
         setIsNext(false)
         setIsStarted(true);
@@ -54,6 +68,7 @@ export default function NumberMemory(){
         if (event.key === 'Enter'){
             if (event.target.value === number){
                 setIsNext(true)
+                setScore(prevState => prevState + 1)
                 handleStartTimer(1000)
                 setTimeout(() => {
                     setIsNext(false)
@@ -67,6 +82,7 @@ export default function NumberMemory(){
             }else{
                 setIsLost(true)
                 setIsStarted(false)
+                setScore(0)
             }
             setIsTimeOver(false)
         }
@@ -113,9 +129,10 @@ export default function NumberMemory(){
             {(isStarted && isTimeOver) && (
                 <>
                     <div className={'full-flex flex-col w-[80%] h-[80%]'}>
-                        <label htmlFor={'numberInput'} className={'text-c-orange'}>Enter the answer</label>
+                        <label htmlFor={'numberInput'} className={'text-c-orange text-2xl md:text-4xl mb-2'}>Enter the
+                            answer</label>
                         <input type={'number'} onKeyDown={handleCheckAnswer} id={'numberInput'}
-                               className={'text-center rounded-md outline-none'}/>
+                               className={'text-center rounded-md outline-none bg-transparent orange-stroke appearance-none text-c-orange no-arrows w-72 h-12 text-2xl md:text-3xl md:w-96'}/>
                     </div>
                 </>
             )}
@@ -127,8 +144,10 @@ export default function NumberMemory(){
                     </div>
                 </>
             )}
-            <span className={'text-white absolute bottom-10 text-3xl'}>Current Score: 00</span>
-            <span className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: 00</span>
+            <span
+                className={'text-white absolute bottom-10 text-3xl'}>Current Score: {score.toString().padStart(2, '0')}</span>
+            <span
+                className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: {highScore.toString().padStart(2, '0')}</span>
             <BgLight className={'absolute left-[50%] translate-x-[-50%] bottom-0'}/>
         </div>
     )

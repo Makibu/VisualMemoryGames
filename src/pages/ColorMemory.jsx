@@ -33,6 +33,20 @@ export default function ColorMemory(){
     
     const [gameStatus, setGameStatus] = useState('Remember Colors!')
     
+    const [score, setScore] = useState(0)
+    
+    if (!localStorage.getItem('ColorMemory')){
+        localStorage.setItem('ColorMemory', '0')
+    }
+    
+    let highScore = 0
+    if (localStorage.getItem('ColorMemory')){
+        highScore = +localStorage.getItem('ColorMemory')
+    }
+    if (highScore < score){
+        localStorage.setItem('ColorMemory', `${score}`)
+    }
+    
     useEffect(function (){
         if (isStarted){
             const colors = Array.from({length: currentRound}, function (){
@@ -72,9 +86,11 @@ export default function ColorMemory(){
         
         if (sequence.every((color, index) => color === userSequence[index])){
             handleNextRound()
+            setScore(prevState => prevState + 1)
             setShowProgress(true)
         }else{
             setIsStarted(false)
+            setScore(0)
             setIsLost(true)
         }
         
@@ -155,8 +171,10 @@ export default function ColorMemory(){
                     </div>
                 </div>
             )}
-            <span className={'text-white absolute bottom-10 text-3xl'}>Current Score: 00</span>
-            <span className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: 00</span>
+            <span
+                className={'text-white absolute bottom-10 text-3xl'}>Current Score: {score.toString().padStart(2, '0')}</span>
+            <span
+                className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: {highScore.toString().padStart(2, '0')}</span>
             <BgLight className="absolute left-[50%] transform translate-x-[-50%] bottom-0"/>
         </div>
     )

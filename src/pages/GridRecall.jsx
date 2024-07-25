@@ -28,6 +28,20 @@ export default function GridRecall(){
     const gridCols = useRef(initialCols)
     const litSquares = useRef(initialSquares)
     
+    const [score, setScore] = useState(0)
+    
+    if (!localStorage.getItem('GridRecall')){
+        localStorage.setItem('GridRecall', '0')
+    }
+    
+    let highScore = 0
+    if (localStorage.getItem('GridRecall')){
+        highScore = +localStorage.getItem('GridRecall')
+    }
+    if (highScore < score){
+        localStorage.setItem('GridRecall', `${score}`)
+    }
+    
     function startNewGame(){
         const newSequence = generateRandomSquares(litSquares.current, gridCols.current ** 2)
         setSequence(newSequence)
@@ -49,6 +63,7 @@ export default function GridRecall(){
         if (!sequence.includes(index)){
             setGameStatus('You lose!')
             setIsPlayerTurn(false)
+            setScore(0)
             
             setTimeout(() => {
                 setCurrentRound(1)
@@ -73,6 +88,7 @@ export default function GridRecall(){
             if (sortedPlayerSequence.every((val, i) => val === sortedSequence[i])){
                 setCurrentRound(prevState => prevState + 1)
                 setGameStatus("You won! Next round...")
+                setScore(prevState => prevState + 1)
                 setTimeout(() => {
                     setIsPlayerTurn(false)
                     setSequence([])
@@ -118,8 +134,10 @@ export default function GridRecall(){
                           isLit={!isPlayerTurn} gridColsCount={gridCols.current}/>
                 </div>
             )}
-            <span className={'text-white absolute bottom-6 text-3xl'}>Current Score: 00</span>
-            <span className={'text-gray-500 absolute bottom-0 text-xl'}>Your High Score: 00</span>
+            <span
+                className={'text-white absolute bottom-6 text-3xl'}>Current Score: {score.toString().padStart(2, '0')}</span>
+            <span
+                className={'text-gray-500 absolute bottom-0 text-xl'}>Your High Score: {highScore.toString().padStart(2, '0')}</span>
             <BgLight className={'absolute left-[50%] translate-x-[-50%] bottom-0'}/>
         </div>
     )

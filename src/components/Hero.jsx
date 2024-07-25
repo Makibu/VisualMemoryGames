@@ -1,13 +1,13 @@
 import BgLight from "./BgLight.jsx";
-import NavButton from "./NavButton.jsx";
 import PlayButton from "./PlayButton.jsx";
+import logo from '../assets/logo.svg'
 
 export default function Hero(){
     return (
         <div
             className={'h-[100svh] w-screen flex justify-center items-center text-center flex-col gap-3 pb-16 relative'}>
+            <img src={logo} alt="Logo MB" className={'absolute top-4 left-4'}/>
             <BgLight/>
-            <NavButton text={'Login'}/>
             <div
                 className={'bg-transparent border-c-orange border-solid border-[1px] w-56 h-8 rounded-md flex items-center justify-start gap-4 pl-2 mb-8 lg:w-80 lg:h-12 lg:pl-6 lg:gap-6'}>
                 <div className={'bg-c-orange rounded-full aspect-square w-4'}></div>
