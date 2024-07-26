@@ -24,7 +24,7 @@ export default function ReactionTime(){
             setHighScore(userTime);
             localStorage.setItem('ReactionTime', userTime.toString());
         }
-        if (highScore === 0){
+        if (highScore === 0 && userTime){
             setHighScore(userTime)
             localStorage.setItem('ReactionTime', userTime.toString())
         }
