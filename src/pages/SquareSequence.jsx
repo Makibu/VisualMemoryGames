@@ -1,6 +1,6 @@
 import BgLight from "../components/BgLight.jsx";
 import NavButton from "../components/NavButton.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 function generateNextInSequence(currentSequence){
     return [...currentSequence, Math.floor(Math.random() * 9)]
@@ -18,14 +18,23 @@ export default function SquareSequence(){
     
     const [score, setScore] = useState(0)
     
-    if (!localStorage.getItem('SquareSequence')){
-        localStorage.setItem('SquareSequence', '0')
+    function highScoreCheck(){
+        if (!localStorage.getItem('SquareSequence')){
+            localStorage.setItem('SquareSequence', '0')
+        }
+        
+        let highScore = 0
+        if (localStorage.getItem('SquareSequence')){
+            highScore = +localStorage.getItem('SquareSequence')
+        }
+        if (highScore < score){
+            localStorage.setItem('SquareSequence', `${score}`)
+        }
     }
     
-    let highScore = 0
-    if (localStorage.getItem('SquareSequence')){
-        highScore = +localStorage.getItem('SquareSequence')
-    }
+    useEffect(() => {
+        highScoreCheck()
+    }, [score]);
     
     function startNewRound(currentSequence){
         setIsLost(false)
@@ -84,9 +93,6 @@ export default function SquareSequence(){
             setScore(prevState => prevState + 1)
             setGameStatus('Next round!')
             setIsPlayerTurn(false)
-            if (highScore < score){
-                localStorage.setItem('SquareSequence', `${score}`)
-            }
             setTimeout(() => startNewRound(sequence), 2000)
             return
         }
