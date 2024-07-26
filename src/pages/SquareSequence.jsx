@@ -18,12 +18,13 @@ export default function SquareSequence(){
     
     const [score, setScore] = useState(0)
     
+    let highScore = 0
+    
     function highScoreCheck(){
         if (!localStorage.getItem('SquareSequence')){
             localStorage.setItem('SquareSequence', '0')
         }
         
-        let highScore = 0
         if (localStorage.getItem('SquareSequence')){
             highScore = +localStorage.getItem('SquareSequence')
         }
