@@ -26,9 +26,6 @@ export default function SquareSequence(){
     if (localStorage.getItem('SquareSequence')){
         highScore = +localStorage.getItem('SquareSequence')
     }
-    if (highScore < score){
-        localStorage.setItem('SquareSequence', `${score}`)
-    }
     
     function startNewRound(currentSequence){
         setIsLost(false)
@@ -87,6 +84,9 @@ export default function SquareSequence(){
             setScore(prevState => prevState + 1)
             setGameStatus('Next round!')
             setIsPlayerTurn(false)
+            if (highScore < score){
+                localStorage.setItem('SquareSequence', `${score}`)
+            }
             setTimeout(() => startNewRound(sequence), 2000)
             return
         }
