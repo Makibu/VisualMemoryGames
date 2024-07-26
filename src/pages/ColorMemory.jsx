@@ -10,11 +10,13 @@ const colorOptions = [
     "rgb(192 132 252)", /*bg-purple-400*/
 ]
 
+//Generating random color from colorOptions Array
 function getRandomColor(){
     const randomIndex = Math.floor(Math.random() * colorOptions.length)
     return colorOptions[randomIndex]
 }
 
+//Looping trough colors on click
 function getNextColor(currentColor){
     const currentIndex = colorOptions.indexOf(currentColor)
     const nextIndex = (currentIndex + 1) % colorOptions.length
@@ -31,23 +33,69 @@ export default function ColorMemory(){
     const [isPlayerTurn, setIsPlayerTurn] = useState(false)
     const [showProgress, setShowProgress] = useState(false)
     
-    const [gameStatus, setGameStatus] = useState('Remember Colors!')
+    const [gameStatus, setGameStatus] = useState()
     
     const [score, setScore] = useState(0)
+    const [highScore, setHighScore] = useState(0)
     
-    if (!localStorage.getItem('ColorMemory')){
-        localStorage.setItem('ColorMemory', '0')
+    useEffect(() => {
+        const savedHighScore = localStorage.getItem('ColorMemory') || '0';
+        setHighScore(parseInt(savedHighScore, 10));
+    }, []);
+    
+    useEffect(() => {
+        if (score > highScore){
+            setHighScore(score);
+            localStorage.setItem('ColorMemory', score.toString());
+        }
+    }, [score, highScore]);
+    
+    //Game mechanics
+    
+    //Game start init
+    function handleStartGame(){
+        setIsStarted(true)
+        setIsLost(false)
+        setUserSequence([])
+        setSequence([])
+        setCurrentRound(1)
+        setGameStatus('Remember Colors!')
     }
     
-    let highScore = 0
-    if (localStorage.getItem('ColorMemory')){
-        highScore = +localStorage.getItem('ColorMemory')
-    }
-    if (highScore < score){
-        localStorage.setItem('ColorMemory', `${score}`)
+    //User square clicks
+    function handleSquareClick(index){
+        if (isPlayerTurn){
+            const updatedColors = userSequence.map((color, i) =>
+                i === index ? getNextColor(color) : color
+            )
+            setUserSequence(updatedColors)
+        }
     }
     
-    useEffect(function (){
+    //Checking if user match colors correctly
+    function handleCheckClick(){
+        if (!isPlayerTurn) return
+        
+        if (sequence.every((color, index) => color === userSequence[index])){
+            setGameStatus('')
+            setShowProgress(true)
+            setScore(prevState => prevState + 1)
+            setTimeout(() => {
+                setCurrentRound(currentRound + 1)
+                setGameStatus('Remember Colors!')
+            }, 1000)
+        }else{
+            setIsStarted(false)
+            setScore(0)
+            setIsLost(true)
+        }
+        
+        setUserSequence([])
+        setIsPlayerTurn(false)
+    }
+    
+    
+    useEffect(() => {
         if (isStarted){
             const colors = Array.from({length: currentRound}, function (){
                 return getRandomColor()
@@ -57,11 +105,12 @@ export default function ColorMemory(){
             setIsPlayerTurn(false)
             
             const timer = setTimeout(function (){
+                setGameStatus('Rematch colors!')
                 setUserSequence(Array.from({length: currentRound}, function (){
                     return "white"
                 }))
                 setIsPlayerTurn(true)
-            }, 2000)
+            }, 3000)
             
             return function (){
                 clearTimeout(timer)
@@ -69,36 +118,6 @@ export default function ColorMemory(){
         }
     }, [isStarted, currentRound])
     
-    function handleStartGame(){
-        setIsStarted(true)
-        setIsLost(false)
-        setUserSequence([])
-        setSequence([])
-        setCurrentRound(1)
-    }
-    
-    function handleNextRound(){
-        setCurrentRound(currentRound + 1)
-    }
-    
-    function handleCheckClick(){
-        if (!isPlayerTurn) return
-        
-        if (sequence.every((color, index) => color === userSequence[index])){
-            handleNextRound()
-            setScore(prevState => prevState + 1)
-            setShowProgress(true)
-        }else{
-            setIsStarted(false)
-            setScore(0)
-            setIsLost(true)
-        }
-        
-        setUserSequence(Array.from({length: currentRound}, function (){
-            return "white"
-        }))
-        setIsPlayerTurn(false)
-    }
     
     useEffect(() => {
         let timer
@@ -110,14 +129,6 @@ export default function ColorMemory(){
         return () => clearTimeout(timer)
     }, [showProgress])
     
-    function handleSquareClick(index){
-        if (isPlayerTurn){
-            const updatedColors = userSequence.map((color, i) =>
-                i === index ? getNextColor(color) : color
-            )
-            setUserSequence(updatedColors)
-        }
-    }
     
     return (
         <div className="bg-black h-[100svh] w-screen flex justify-center items-center font-anonPro relative">

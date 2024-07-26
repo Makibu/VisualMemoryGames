@@ -17,25 +17,19 @@ export default function SquareSequence(){
     const [gameStatus, setGameStatus] = useState('Watch the sequence');
     
     const [score, setScore] = useState(0)
-    
-    let highScore = 0
-    
-    function highScoreCheck(){
-        if (!localStorage.getItem('SquareSequence')){
-            localStorage.setItem('SquareSequence', '0')
-        }
-        
-        if (localStorage.getItem('SquareSequence')){
-            highScore = +localStorage.getItem('SquareSequence')
-        }
-        if (highScore < score){
-            localStorage.setItem('SquareSequence', `${score}`)
-        }
-    }
+    const [highScore, setHighScore] = useState(0)
     
     useEffect(() => {
-        highScoreCheck()
-    }, [score]);
+        const savedHighScore = localStorage.getItem('SquareSequence') || '0';
+        setHighScore(parseInt(savedHighScore, 10));
+    }, []);
+    
+    useEffect(() => {
+        if (score > highScore){
+            setHighScore(score);
+            localStorage.setItem('SquareSequence', score.toString());
+        }
+    }, [score, highScore]);
     
     function startNewRound(currentSequence){
         setIsLost(false)

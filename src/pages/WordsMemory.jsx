@@ -1,6 +1,6 @@
 import NavButton from "../components/NavButton.jsx";
 import BgLight from "../components/BgLight.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const wordsArray = [
     'bade', 'bare', 'bard', 'boar', 'brad', 'bred', 'fane', 'fare', 'fate',
@@ -29,18 +29,19 @@ export default function WordsMemory(){
     const [wordHistory, setWordHistory] = useState([]);
     
     const [score, setScore] = useState(0)
+    const [highScore, setHighScore] = useState(0)
     
-    if (!localStorage.getItem('WordsMemory')){
-        localStorage.setItem('WordsMemory', '0')
-    }
+    useEffect(() => {
+        const savedHighScore = localStorage.getItem('WordsMemory') || '0';
+        setHighScore(parseInt(savedHighScore, 10));
+    }, []);
     
-    let highScore = 0
-    if (localStorage.getItem('WordsMemory')){
-        highScore = +localStorage.getItem('WordsMemory')
-    }
-    if (highScore < score){
-        localStorage.setItem('WordsMemory', `${score}`)
-    }
+    useEffect(() => {
+        if (score > highScore){
+            setHighScore(score);
+            localStorage.setItem('WordsMemory', score.toString());
+        }
+    }, [score, highScore]);
     
     function generateNewWord(){
         const randomWord = wordsArray[Math.floor(Math.random() * wordsArray.length)]
@@ -98,7 +99,7 @@ export default function WordsMemory(){
             <span
                 className={'text-white absolute bottom-10 text-3xl'}>Current Score: {score.toString().padStart(2, '0')}</span>
             <span
-                className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: {highscore.toString().padStart(2, '0')}</span>
+                className={'text-gray-500 absolute bottom-4 text-xl'}>Your High Score: {highScore.toString().padStart(2, '0')}</span>
             <BgLight className={'absolute left-[50%] translate-x-[-50%] bottom-0'}/>
         </div>
     )

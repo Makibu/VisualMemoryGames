@@ -1,6 +1,6 @@
 import NavButton from "../components/NavButton.jsx";
 import BgLight from "../components/BgLight.jsx";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import Grid from "../components/Grid.jsx";
 
 
@@ -29,18 +29,19 @@ export default function GridRecall(){
     const litSquares = useRef(initialSquares)
     
     const [score, setScore] = useState(0)
+    const [highScore, setHighScore] = useState(0)
     
-    if (!localStorage.getItem('GridRecall')){
-        localStorage.setItem('GridRecall', '0')
-    }
+    useEffect(() => {
+        const savedHighScore = localStorage.getItem('GridRecall') || '0';
+        setHighScore(parseInt(savedHighScore, 10));
+    }, []);
     
-    let highScore = 0
-    if (localStorage.getItem('GridRecall')){
-        highScore = +localStorage.getItem('GridRecall')
-    }
-    if (highScore < score){
-        localStorage.setItem('GridRecall', `${score}`)
-    }
+    useEffect(() => {
+        if (score > highScore){
+            setHighScore(score);
+            localStorage.setItem('GridRecall', score.toString());
+        }
+    }, [score, highScore]);
     
     function startNewGame(){
         const newSequence = generateRandomSquares(litSquares.current, gridCols.current ** 2)

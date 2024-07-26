@@ -15,18 +15,19 @@ export default function NumberMemory(){
     const intervalId = useRef()
     
     const [score, setScore] = useState(0)
+    const [highScore, setHighScore] = useState(0)
     
-    if (!localStorage.getItem('NumberMemory')){
-        localStorage.setItem('NumberMemory', '0')
-    }
+    useEffect(() => {
+        const savedHighScore = localStorage.getItem('NumberMemory') || '0';
+        setHighScore(parseInt(savedHighScore, 10));
+    }, []);
     
-    let highScore = 0
-    if (localStorage.getItem('NumberMemory')){
-        highScore = +localStorage.getItem('NumberMemory')
-    }
-    if (highScore < score){
-        localStorage.setItem('NumberMemory', `${score}`)
-    }
+    useEffect(() => {
+        if (score > highScore){
+            setHighScore(score);
+            localStorage.setItem('NumberMemory', score.toString());
+        }
+    }, [score, highScore]);
     
     function handleStartGame(){
         setIsNext(false)

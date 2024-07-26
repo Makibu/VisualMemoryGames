@@ -1,6 +1,6 @@
 import NavButton from "../components/NavButton.jsx";
 import BgLight from "../components/BgLight.jsx";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 export default function ReactionTime(){
     const [isStarted, setIsStarted] = useState(false)
@@ -12,20 +12,23 @@ export default function ReactionTime(){
     const [userTime, setUserTime] = useState()
     const timeRef = useRef()
     
-    if (!localStorage.getItem('ReactionTime')){
-        localStorage.setItem('ReactionTime', '0')
-    }
+    const [highScore, setHighScore] = useState(0)
     
-    let highScore = 0
-    if (localStorage.getItem('ReactionTime')){
-        highScore = +localStorage.getItem('ReactionTime')
-    }
-    if ((highScore > userTime) && highScore !== 0){
-        localStorage.setItem('ReactionTime', `${userTime}`)
-    }
-    if (highScore === 0 && userTime){
-        localStorage.setItem('ReactionTime', `${userTime}`)
-    }
+    useEffect(() => {
+        const savedHighScore = localStorage.getItem('ReactionTime') || '0';
+        setHighScore(parseInt(savedHighScore, 10));
+    }, []);
+    
+    useEffect(() => {
+        if (userTime < highScore){
+            setHighScore(userTime);
+            localStorage.setItem('ReactionTime', userTime.toString());
+        }
+        if (highScore === 0){
+            setHighScore(userTime)
+            localStorage.setItem('ReactionTime', userTime.toString())
+        }
+    }, [userTime, highScore]);
     
     function handleButtonActions(){
         setIsSubmitted(false)
