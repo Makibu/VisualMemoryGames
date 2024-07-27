@@ -47,3 +47,10 @@
     -webkit-appearance: none; /* Safari, Chrome */
     margin: 0;
 }
+
+html {
+    @apply bg-c-black z-[-1];
+    background: rgb(10, 10, 10);
+    margin: 0;
+    padding: 0;
+}
